@@ -39,8 +39,6 @@ public class Video_options : MonoBehaviour
     {
         //Get resolutions when we start the game
         resolutions = Screen.resolutions;
-        
-        //Set resolution in the inspector before starting the game
 
 
 
@@ -71,11 +69,11 @@ public class Video_options : MonoBehaviour
         List<string> options = new List<string>();
         int currentResolutionIndex = 0;
         string option;
+		
+		//Shortened list without duplicate resolutions. Shorteened list keeps reference of the original list placement for later use
         for (int i = 0; i < resolutions.Length; i++)
         {
 
-            //option = resolutions[i].width + " x " + resolutions[i].height + " @ " + resolutions[i].refreshRate + "Hz";
-            
             option = resolutions[i].width + " x " + resolutions[i].height;
 
             if (!options.Contains(option))
@@ -85,7 +83,7 @@ public class Video_options : MonoBehaviour
             }
 
 
-
+			// Set current resolution
             if (resolutions[i].width == Screen.width && resolutions[i].height == Screen.height && !options.Contains(resolutions[i].width + " x " + resolutions[i].height))
             {
             currentResolutionIndex = i;

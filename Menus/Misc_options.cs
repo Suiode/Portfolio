@@ -51,14 +51,6 @@ public class Misc_options : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-
-    }
-
-
 
     public void ToggleFPSCounter()
     {

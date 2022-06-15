@@ -49,6 +49,8 @@ public class PauseScript : MonoBehaviour
     {
         Application.Quit();
     }
+	
+	//Character selection. Resets the scene once the character is changed
     public void ChooseIvy()
     {
         gameManager.isCharacterIvy = true;

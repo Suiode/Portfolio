@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 public class HeaderSelection : MonoBehaviour
 {
     public GameObject currentlySelected;
-    //public GameObject newButtonClicked;
 
     public Image currentlySelectedImage;
     public GameObject gameplayOptions;
@@ -17,10 +16,8 @@ public class HeaderSelection : MonoBehaviour
 
     public void SetNewActive(GameObject newSelected, Image selectedBackgroundImage)
     {
-        //currentlySelectedImage.gameObject.SetActive(false);
         if (newSelected != currentlySelected)
         {
-            //currentlySelectedImage.gameObject.SetActive(false);
             DeselectCurrentActive(selectedBackgroundImage);
             currentlySelected = newSelected;
             currentlySelectedImage = selectedBackgroundImage;
@@ -28,7 +25,6 @@ public class HeaderSelection : MonoBehaviour
             currentlySelected.SetActive(true);
         }
         
-        //Image selectedBackgroundImage = this.gameObject.GetComponent<Image>();
     }
 
     public void DeselectCurrentActive(Image selectedBackgroundImage)
