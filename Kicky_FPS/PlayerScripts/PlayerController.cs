@@ -6,53 +6,53 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
 
-    public CharacterController controller;
-    public GameManager gameManager;
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private GameManager gameManager;
     public Slider healthSlider;
     public Slider deadHealthSlider;
     
     
 
-    public float health = 100f;
-    public bool runToggle = false;
+    [SerializeField] private float health = 100f;
+    [SerializeField] private bool runToggle = false;
     public float moveSpeed = 10f;
     public float walkSpeed = 10f;
     public float runSpeed = 20f;
     public float gravity = -9.81f;
     public float jumpHeight = 100f;
     public float maxHealth;
-    public float deadHealth;
+    [SerializeField] private float deadHealth;
 
     private bool canRegainHealth;
-    public bool tired = false;
-    public float healthRegenTimer;
-    public float victorHealthRegen = 20;
-    public float ivyHealthRegen = 15;
+    private bool tired = false;
+    [SerializeField] private float healthRegenTimer;
+    [SerializeField] private float victorHealthRegen = 20;
+    [SerializeField] private float ivyHealthRegen = 15;
 
-    public Transform kick;
-    public float kickRadius = 3f;
-    public float kickSpeed = 100f;
+    [SerializeField] private Transform kick;
+    [SerializeField] private float kickRadius = 3f;
+    [SerializeField] private float kickSpeed = 100f;
     private bool isKicking = false;
 
 
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
-    public LayerMask enemyLayer;
-    Vector3 velocity;
-    public bool isGrounded;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask enemyLayer;
+    private Vector3 velocity;
+    private bool isGrounded;
     public PauseScript pauseScript;
-    public Animator anim;
-    public Camera playerCam;
-    public Transform playerTransform;
+    [SerializeField] private Animator anim;
+    [SerializeField] private Camera playerCam;
+    [SerializeField] private Transform playerTransform;
 
 
 
     //Code for leaning
-    public float leanDistance = 0;
-    public float maxLeanDistance = 20;
-    public int leanSpeed = 50;
-    public bool isLeaning = false;
+    [SerializeField] private float leanDistance = 0;
+    [SerializeField] private float maxLeanDistance = 20;
+    [SerializeField] private int leanSpeed = 50;
+    [SerializeField] private bool isLeaning = false;
 
     private void Start()
     {
@@ -174,15 +174,12 @@ public class PlayerController : MonoBehaviour
         foreach(Collider enemyHit in peopleWeHit)
         {
             
-            //float travelledDistance = 0;
             Vector3 startingPosition = enemyHit.transform.position;
             Rigidbody enemyHitRb = enemyHit.attachedRigidbody;
             Enemy enemyHitGameObj = enemyHit.GetComponent<Enemy>();
 
             enemyHitRb.AddForce(transform.forward * kickSpeed, ForceMode.Impulse);
-            //travelledDistance = Vector3.Distance(startingPosition, enemyHit.transform.position);
 
-            Debug.Log("WE KICKING THE HOMIES");
         }
         isKicking = false;
         anim.SetBool("Kick", false);
@@ -198,13 +195,12 @@ public class PlayerController : MonoBehaviour
     {
         healthSlider.value = health;
         
-        if(gameManager.isCharacterIvy == true && health < maxHealth)
+        if(gameManager.isCharacterIvy && health < maxHealth)
         {
             health = health + (ivyHealthRegen * Time.deltaTime);
-            //Debug.Log("HealthRegen: " + (-(maxHealth - health) * Time.deltaTime));
         }
 
-        if(gameManager.isCharacterIvy == false)
+        if(!gameManager.isCharacterIvy)
         {
             if(!tired && canRegainHealth && (health < maxHealth) && moveSpeed < runSpeed)
             {
@@ -229,13 +225,13 @@ public class PlayerController : MonoBehaviour
         isLeaning = true;
         //playerTransform.RotateAround(transform.position, Vector3.forward, leanDistance);
 
-        if (isLeaning == true && leanLeft == false && leanDistance > -maxLeanDistance)
+        if (isLeaning && !leanLeft && leanDistance > -maxLeanDistance)
         {
             leanDistance -= Time.deltaTime * (leanSpeed);
             //playerTransform.transform.RotateAround(playerTransform.position, playerTransform.right, leanDistance);
             //playerTransform.Rotate(Vector3.forward, leanDistance);
         }
-        else if (isLeaning == true && leanLeft == true && leanDistance < maxLeanDistance)
+        else if (isLeaning && leanLeft && leanDistance < maxLeanDistance)
         {
             leanDistance += Time.deltaTime * (leanSpeed);
             //playerTransform.RotateAround(playerTransform.position, playerTransform.right, leanDistance);
@@ -254,7 +250,7 @@ public class PlayerController : MonoBehaviour
             Die();
         }
 
-        if (gameManager.isCharacterIvy == false)
+        if (!gameManager.isCharacterIvy)
         {
             deadHealth += damageTaken;
             maxHealth -= damageTaken;

@@ -24,26 +24,26 @@ public class GunScript : MonoBehaviour
 
     public float reloadSpeed = 2f;
     public float magazineSize;
-    public float bulletsLoaded = 30f;
-    public float bulletDamage = 10f;
+    [SerializeField] private float bulletsLoaded = 30f;
+    [SerializeField] private float bulletDamage = 10f;
     public float range = 100f;
-    public bool isReloading = false;
+    [SerializeField] private bool isReloading = false;
 
 
-    public bool allowFullAuto;
-    public bool readyForNextShot;
-    public float bulletsPerTriggerPull = 1;
+    [SerializeField] private bool allowFullAuto;
+    [SerializeField] private bool readyForNextShot;
+    [SerializeField] private float bulletsPerTriggerPull = 1;
 
     
-    public Camera fpsCam;
-    public ParticleSystem muzzleFlash;
-    public Animator anim;
-    public TextMeshPro ammoCounterFloating;
-    public TextMeshPro floatingFiringMode;
-    public Text weaponType;
-    public GameObject bulletHole;
-    public LineRenderer bulletTravel;
-    public GameObject muzzle;
+    [SerializeField] private Camera fpsCam;
+    [SerializeField] private ParticleSystem muzzleFlash;
+    [SerializeField] private Animator anim;
+    [SerializeField] private TextMeshPro ammoCounterFloating;
+    [SerializeField] private TextMeshPro floatingFiringMode;
+    [SerializeField] private Text weaponType;
+    [SerializeField] private GameObject bulletHole;
+    [SerializeField] private LineRenderer bulletTravel;
+    [SerializeField] private GameObject muzzle;
     public Misc_options cheat_options;
 
 
@@ -69,10 +69,9 @@ public class GunScript : MonoBehaviour
     void Update()
     {
         bulletTravel.SetPosition(1, muzzle.transform.position);
-        // Reset the line renderer so it disappears after the shot
         //ResetGun();
 
-        // Shoot once or multiple times depending on fire mode
+        // Firing mode
         if (allowFullAuto && !PauseScript.gameIsPaused)
         {
             if (Input.GetMouseButton(0) && readyForNextShot && bulletsLoaded > 0 && !isReloading)
@@ -137,8 +136,6 @@ public class GunScript : MonoBehaviour
 
     private void Shoot()
     {
-
-        //recoilOn = true;
         float ySpread = Random.Range(recoilUp, recoilUp);
         float xSpread = Random.Range(-recoilSideToSide, recoilSideToSide);
 
@@ -149,7 +146,6 @@ public class GunScript : MonoBehaviour
         if (Physics.Raycast(fpsCam.transform.position, directionRay, out hit, range))
         {
             Enemy target = hit.transform.GetComponentInParent<Enemy>();
-            //Debug.Log(hit.point);
             
             if (target != null)
             {
@@ -185,8 +181,7 @@ public class GunScript : MonoBehaviour
             bulletsLoaded--;
         }
 
-        //ammoCounterUI.text = (bulletsLoaded + "/" + magazineSize);
-        //muzzleFlash.Play();
+
         if (!cheat_options.laserGun)
         {
             readyForNextShot = false;
@@ -223,7 +218,6 @@ public class GunScript : MonoBehaviour
         yield return new WaitForSeconds(reloadSpeed);
         isReloading = false;
         bulletsLoaded = magazineSize;
-        //ammoCounterUI.text = (bulletsLoaded + "/" + magazineSize);
         ammoCounterFloating.text = (bulletsLoaded + "/" + magazineSize);
         readyForNextShot = true;
     }
@@ -238,12 +232,10 @@ public class GunScript : MonoBehaviour
     {
         if (allowFullAuto == true)
         {
-            //fireMode.text = ("Fully-automatic");
             floatingFiringMode.text = ("PEW PEW PEW");
         }
         else
         {
-            //fireMode.text = ("Semi-automatic");
             floatingFiringMode.text = ("PEW");
 
         }
