@@ -7,9 +7,9 @@ public class EnemyPatrol : MonoBehaviour
 {
     public Transform[] patrolPoints;
     private int destPoint = 0;
-    public NavMeshAgent navAgent;
-    public float minimumDistanceToPoint = 0.5f;
-    public Enemy enemy;
+    [SerializeField] private NavMeshAgent navAgent;
+    [SerializeField] private float minimumDistanceToPoint = 0.5f;
+    [SerializeField] private Enemy enemy;
     //public PlayerController player;
 
 
@@ -47,6 +47,5 @@ public class EnemyPatrol : MonoBehaviour
     public void AggressiveBehavior()
     {
         navAgent.destination = enemy.lastLocation;
-        //Debug.Log("Last player location: " + enemy.lastLocation);
     }
 }

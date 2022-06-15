@@ -7,11 +7,11 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
 
-    public float viewRadius;
+    [SerializeField] private float viewRadius;
     [Range(0, 360)]
     public float viewAngle; 
     public float range;
-    public float fovCheckTime = 0.2f;
+    [SerializeField] private float fovCheckTime = 0.2f;
     public float alertMaxTime = 5;
     public float alertCountdown = 5;
     public int difficulty;
@@ -19,20 +19,20 @@ public class Enemy : MonoBehaviour
     public float health = 40f;
     
 
-    public GameObject player;
-    public LayerMask targetMask;
-    public LayerMask wallsMask;
-    public EnemyGunScript enemyGun;
-    public Light alertLight;
-    public Rigidbody rb;
+    private GameObject player;
+    [SerializeField] private LayerMask targetMask;
+    [SerializeField] private LayerMask wallsMask;
+    [SerializeField] private EnemyGunScript enemyGun;
+    [SerializeField] private Light alertLight;
+    [SerializeField] private Rigidbody rb;
     public EnemyPatrol patrolBehavior;
 
-    public bool canSeePlayer;
-    public float enemySpeed = 5;
-    public bool alert;
-    public bool aggressive;
-    public bool currentlySearching;
-    public Vector3 lastLocation =new Vector3 (0, 0, 0);
+    [SerializeField] private bool canSeePlayer;
+    [SerializeField] private float enemySpeed = 5;
+    [SerializeField] private bool alert;
+    [SerializeField] private bool aggressive;
+    [SerializeField] private bool currentlySearching;
+    private Vector3 lastLocation =new Vector3 (0, 0, 0);
 
 
     // Start is called before the first frame update
@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canSeePlayer == true)
+        if (canSeePlayer)
         {
             alertLight.color = new Color(1, 1, 0);
             //transform.position = transform.position + ((player.transform.position - transform.position).normalized * Time.deltaTime) * enemySpeed;
@@ -57,14 +57,14 @@ public class Enemy : MonoBehaviour
             StartCoroutine(ReactionTime());
         }
 
-        if (alert == true && canSeePlayer == false)
+        if (alert && !canSeePlayer)
         {
             SearchForPlayer();
             enemyGun.enemyAttack = false;
         }
 
 
-        if (canSeePlayer == false)
+        if (!canSeePlayer
         {
             enemyGun.enemyAttack = false;
         }
@@ -173,7 +173,6 @@ public class Enemy : MonoBehaviour
         }
         transform.LookAt(player.transform);
         currentlySearching = true;
-        //Debug.Log("Where did they go?");
         StartCoroutine(AlertCooldown());
         patrolBehavior.AggressiveBehavior();
 
@@ -187,11 +186,7 @@ public class Enemy : MonoBehaviour
         patrolBehavior.AggressiveBehavior();
     }
 
-    private void LookForCover()
-    {
-
-    }
-
+	//If this object is moving faster than intended (from some sort of knockback), take damage equal to force once they hit another object
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.relativeVelocity.magnitude > 100)

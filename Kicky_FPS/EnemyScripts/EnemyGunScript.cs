@@ -5,31 +5,30 @@ using UnityEngine.UI;
 
 public class EnemyGunScript : MonoBehaviour
 {
-    public bool enemyAttack;
+	//Keeping these public for tools to interact with these variables. e.g. hacking to jam guns, grenades that daze enemies so they're less accurate
+    private bool enemyAttack;
     public float recoilSideToSide;
     public float recoilUp;
     public float recoilDown;
     public float resetRecoilSpeed;
-
     public float fireRate;
-
     public float reloadSpeed = 2f;
     public int magazineSize;
-    public int bulletsLoaded = 30;
+    private int bulletsLoaded = 30;
     public float enemyBulletDamage = 10f;
     public float range = 100f;
-    public bool isReloading = false;
+    private bool isReloading = false;
     public float headshotMultiplier = 4;
     public float limbMultiplier = 0.5f;
 
-    public bool allowFullAuto;
+    private bool allowFullAuto;
     public bool readyForNextShot;
-    public float bulletsPerTriggerPull = 1;
+    private float bulletsPerTriggerPull = 1;
 
-    public ParticleSystem enemyMuzzleFlash;
-    public GameObject bulletHole;
-    public LineRenderer enemyBulletTravel;
-    public GameObject enemyMuzzle;
+    [SerializeField] private ParticleSystem enemyMuzzleFlash;
+    [SerializeField] private GameObject bulletHole;
+    [SerializeField] private LineRenderer enemyBulletTravel;
+    [SerializeField] private GameObject enemyMuzzle;
     //public Animator enemyAnim;
 
 
@@ -42,9 +41,6 @@ public class EnemyGunScript : MonoBehaviour
     void Start()
     {
         readyForNextShot = true;
-        //enemyAnim = GetComponent<Animator>();
-
-
     }
 
     // Update is called once per frame
@@ -53,11 +49,6 @@ public class EnemyGunScript : MonoBehaviour
         // Reset the line renderer so it disappears after the shot
         enemyBulletTravel.SetPosition(0, enemyMuzzle.transform.position);
         enemyBulletTravel.SetPosition(1, enemyMuzzle.transform.position);
-
-
-        // Disable animations when they're not running
-        //enemyAnim.SetBool("ReloadAnimationBool", false);
-        //enemyAnim.SetBool("Firing", false);
 
 
         // Shoot once or multiple times depending on fire mode
@@ -84,13 +75,13 @@ public class EnemyGunScript : MonoBehaviour
             Reload();
         }
 
-        //Recoil();
     }
 
 
 
     private void Shoot()
     {
+		//Recoil works, but is too random. No first shot accuracy atm
         float ySpread = Random.Range(0, recoilUp);
         float xSpread = Random.Range(-recoilSideToSide, recoilSideToSide);
 
@@ -130,10 +121,8 @@ public class EnemyGunScript : MonoBehaviour
 
         bulletsLoaded--;
         readyForNextShot = false;
-        //enemyAnim.SetBool("Firing", true);
         enemyMuzzleFlash.Play();
         StartCoroutine(RateOfFire());
-        //Debug.Log("This is where the enemy is hitting: " + hit.transform);
     }
 
 
@@ -153,14 +142,7 @@ public class EnemyGunScript : MonoBehaviour
 
     private void Reload()
     {
-        //enemyAnim.SetBool("ReloadAnimationBool", true);
         StartCoroutine(ReloadTimer());
     }
-
-    /*public void Recoil()
-    {
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(transform.rotation.x * recoilUp, transform.rotation.y * recoilUp, transform.rotation.z * recoilUp), 0.1f);
-        //recoilOn = false;
-    }*/ 
 
 }
