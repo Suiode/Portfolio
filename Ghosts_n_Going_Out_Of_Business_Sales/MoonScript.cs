@@ -4,19 +4,21 @@ using UnityEngine;
 
 public class MoonScript : MonoBehaviour
 {
+    [Header("Game Objects")]
     public Light moonlight;
     public Camera camera;
-    public bool bloodMoonEnabled;
-    public float defaultChangeTime = 0.2f;
-    public float changeTime = 0;
-
-    public bool shiftingPhase = false;
 
 
+    [Header("Moon shift variables")]
+    [SerializeField] private bool bloodMoonEnabled;
+    [SerializeField] private float defaultChangeTime = 0.2f;
+    [SerializeField] private float changeTime = 0;
+    [SerializeField] private bool shiftingPhase = false;
 
-    // Start is called before the first frame update
+
     void Start()
     {
+        //Change blood moon status based on startup color
         if (moonlight.color == Color.red)
         {
             StartCoroutine(MoonShift(moonlight.color, Color.red));
@@ -33,13 +35,14 @@ public class MoonScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.F) && !bloodMoonEnabled)
+        //Current setup to change color whenever I like. In the future this will all be handled by the MoonShift() coroutine
+        if (Input.GetKeyDown(KeyCode.F) && !bloodMoonEnabled)
         {
             //shiftingPhase = true;
             StartCoroutine(MoonShift(moonlight.color, Color.red));
             bloodMoonEnabled = true;
         }
-        else if(Input.GetKeyDown(KeyCode.F) && bloodMoonEnabled)
+        else if (Input.GetKeyDown(KeyCode.F) && bloodMoonEnabled)
         {
             //shiftingPhase = true;
             StartCoroutine(MoonShift(moonlight.color, Color.gray));
@@ -60,7 +63,7 @@ public class MoonScript : MonoBehaviour
             changeTime += Time.deltaTime;
             moonlight.color = Color.Lerp(oldColor, newColor, (changeTime / defaultChangeTime));
             camera.backgroundColor = Color.Lerp(oldColor, newColor, (changeTime / defaultChangeTime));
-            
+
 
             if (changeTime >= defaultChangeTime)
             {
@@ -68,7 +71,7 @@ public class MoonScript : MonoBehaviour
                 changeTime = 0;
             }
         }
-        
+
     }
 
 

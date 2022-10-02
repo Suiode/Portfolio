@@ -6,24 +6,25 @@ using TMPro;
 
 public class MouseLook : MonoBehaviour
 {
+    [Header("Mouse variables")]
+    [SerializedField] private float mouseX;
+    [SerializedField] private float mouseY;
+    [SerializedField] private float yMouseSens = 100f;
+    [SerializedField] private float xMouseSens = 100f;
+    private float xRotation;
+    private float yRotation;
 
-    public float mouseX;
-    public float mouseY;
+    [Header("Game Objects")]
+    [SerializedField] private Transform playerBody;
+    [SerializedField] private Transform eyes;
+    [SerializedField] private Camera playerCam;
+
+    ////Future use with UI
     //public bool linkedXY = true;
     //public Slider mouseSensitivityX;
     //public Slider mouseSensitivityY;
     //public TMP_InputField mouseSensXNum;
     //public TMP_InputField mouseSensYNum;
-    public Camera playerCam;
-
-    public Transform playerBody;
-    public Transform eyes;
-
-
-    public float yMouseSens = 100f;
-    public float xMouseSens = 100f;
-    float xRotation;
-    float yRotation;
 
 
     // Start is called before the first frame update
@@ -39,6 +40,8 @@ public class MouseLook : MonoBehaviour
         //yMouseSens = yMouseSens * mouseSensitivity.value;
         //mouseX = Input.GetAxis("Mouse X") * (xMouseSens * mouseSensitivityX.value)/10 * Time.deltaTime;
         //mouseY = Input.GetAxis("Mouse Y") * (yMouseSens * mouseSensitivityY.value)/10 * Time.deltaTime;
+
+
         mouseX = Input.GetAxis("Mouse X") * (xMouseSens) * Time.deltaTime;
         mouseY = Input.GetAxis("Mouse Y") * (yMouseSens) * Time.deltaTime;
 
@@ -50,20 +53,13 @@ public class MouseLook : MonoBehaviour
         transform.localRotation = Quaternion.Euler(0, yRotation, 0);
         eyes.transform.localRotation = Quaternion.Euler(xRotation, 0, 0); ;
 
-        //Test to see if we can get rid of forward momentum when looking up
-        //playerCam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-
-        /*if (PauseScript.gameIsPaused)
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else if (!PauseScript.gameIsPaused)
-            Cursor.lockState = CursorLockMode.Locked;
-        */
 
     }
 
 
+
+
+    //Scripts for UI elements, currently not used
 
     /*public void UpdateValueFromFloatX(float value)
     {

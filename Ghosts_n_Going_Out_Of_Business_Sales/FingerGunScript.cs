@@ -19,7 +19,6 @@ public class FingerGunScript : MonoBehaviour
 
     //Magazine stats
     [Header("Magazine stats")]
-    [SerializeField] private int magazineSize = 30;
     [SerializeField] private int bulletsLoaded = 0;
     [SerializeField] private float reloadSpeed = 1f;
 
@@ -73,7 +72,6 @@ public class FingerGunScript : MonoBehaviour
 
         if (Physics.Raycast(fpsCam.transform.position, directionRay, out hit, range, shootableLayers))
         {
-            //Check if we hit an enemy. This will be updated later to include all enemy types
             GhostFace target = hit.transform.GetComponentInParent<GhostFace>();
 
             //Check if we should increase or reduce damage based on where we hit
@@ -134,7 +132,7 @@ public class FingerGunScript : MonoBehaviour
 
     public IEnumerator SpawnLineTrail(Vector3 hitPoint, float distance)
     {
-        
+
         float timer = 0;
         Vector3 startPosition = muzzle.transform.position;
 

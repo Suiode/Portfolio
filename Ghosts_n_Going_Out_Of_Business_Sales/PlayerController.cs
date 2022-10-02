@@ -6,35 +6,46 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
 
-    public CharacterController controller;
-    //public Slider healthSlider;
-
 
     public float health = 100f;
-    public float moveSpeed = 5f;
-    public float walkSpeed = 5f;
-    public float runSpeed = 10f;
+
+    [Header("Movement")]
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float dashSpeed = 10f;
+    [SerializeField] private float dashMaxTime = 0.5f;
+    [SerializeField] private bool dashing = false;
+
+
+    [Header("Jumping and gravity")]
     public float currentGravity = -20f;
-    [SerializeField] float defaultGravity = -20f;
-    public float jumpHeight = 10f;
-    public float maxHealth;
+    [SerializeField] private float defaultGravity = -20f;
+    [SerializeField] private float jumpHeight = 10f;
+    [SerializeField] private float jumpSpeed = 0.25f;
+    [SerializeField] private float jumpMaxTimer = 1f;
+    [SerializeField] private float groundDistance = 0.3f;
+    private Vector3 velocity;
+    [SerializeField] private bool isGrounded;
 
-    private bool canRegainHealth;
-    public float healthRegenTimer;
-    public float healthRegenSpeed = 15;
+
+    [Header("Health")]
+    [SerializeField] private float maxHealth;
+    [SerializeField] private bool canRegainHealth;
+    [SerializeField] private float healthRegenTimer;
+    [SerializeField] private float healthRegenSpeed = 15;
 
 
-    public Transform groundCheck;
-    public float groundDistance = 0.3f;
-    public LayerMask groundMask;
-    public LayerMask enemyLayer;
-    Vector3 velocity;
-    public bool isGrounded;
-    public Animator anim;
-    public Camera playerCam;
-    public Transform playerTransform;
+    [Header("Game Objects")]
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private Animator anim;
+    [SerializeField] private Camera playerCam;
+    [SerializeField] private Transform playerTransform;
+    [SerializeField] private CharacterController controller;
 
-    public bool godMode = false;
+    [Header("Misc")]
+    [SerializeField] private bool godMode = false;
 
 
 
@@ -61,18 +72,17 @@ public class PlayerController : MonoBehaviour
 
 
         if (Input.GetButtonDown("Jump") && isGrounded)
-            Jump();
-
-
-        //Running
-        if ((Input.GetKey(KeyCode.LeftShift)))
         {
-            moveSpeed = runSpeed;
+            StartCoroutine(Jump());
         }
-        else
-            moveSpeed = walkSpeed;
 
-        
+
+        //Dash
+        if ((Input.GetKeyDown(KeyCode.LeftShift) && !dashing))
+        {
+            StartCoroutine(Dash(moveSpeed));
+        }
+
 
     }
 
@@ -85,17 +95,56 @@ public class PlayerController : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
+        //if (velocity.y > currentGravity)
+        //{
+        //    velocity.y += currentGravity;
+        //}
+        //else
+        //{
+        velocity.y += currentGravity;
 
-        Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * moveSpeed * Time.deltaTime);
-        velocity.y += currentGravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        if (velocity.y < currentGravity)
+        {
+            velocity.y = currentGravity;
+        }
+        //}
 
+        Vector3 move = (transform.right * x) * moveSpeed + (transform.forward * z) * moveSpeed + (velocity);
+
+        controller.Move(move * Time.deltaTime);
+
+        //controller.Move(velocity * Time.deltaTime);
     }
 
-    private void Jump()
+    private IEnumerator Jump()
     {
-        velocity.y = jumpHeight;
+        float timer = 0;
+        moveSpeed *= 2f;
+        //velocity.y += jumpHeight;
+
+
+        //while(velocity.y < jumpHeight)
+        //{
+        //    yield return null;
+        //    //velocity.y += jumpHeight * moveSpeed;
+        //    velocity.y = Mathf.Lerp(velocity.y, jumpHeight, jumpSpeed);
+        //}
+
+        while (timer <= jumpMaxTimer)
+        {
+            yield return null;
+            timer += Time.deltaTime;
+
+            velocity.y = Mathf.Lerp(velocity.y, Mathf.Abs(currentGravity) * jumpHeight, jumpSpeed - timer);
+
+            if (isGrounded && timer > 0.5f)
+            {
+                break;
+            }
+        }
+
+
+        moveSpeed = walkSpeed;
     }
 
 
@@ -147,7 +196,7 @@ public class PlayerController : MonoBehaviour
         {
             godMode = true;
             currentGravity = 0;
-    
+
         }
         else
         {
@@ -178,16 +227,39 @@ public class PlayerController : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
 
 
-        
+
 
         //Make sure moving up and down don't happen forever
-        if((velocity.y > 0 || velocity.y < 0) && !(Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Q)))
+        if ((velocity.y > 0 || velocity.y < 0) && !(Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Q)))
         {
             velocity.y = 0;
-        }    
- 
+        }
+
     }
 
 
+    private IEnumerator Dash(float curMoveSpeed)
+    {
+        moveSpeed = curMoveSpeed * dashSpeed;
+        float dashTimer = 0;
+        dashing = true;
+
+        yield return null;
+
+
+        while (dashing)
+        {
+            dashTimer += Time.deltaTime;
+
+
+            if (dashTimer > dashMaxTime)
+            {
+                dashing = false;
+                moveSpeed = curMoveSpeed;
+            }
+
+        }
+
+    }
 
 }
