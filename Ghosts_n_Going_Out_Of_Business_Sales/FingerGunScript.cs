@@ -73,6 +73,7 @@ public class FingerGunScript : MonoBehaviour
 
         if (Physics.Raycast(fpsCam.transform.position, directionRay, out hit, range, shootableLayers))
         {
+            //Check if we hit an enemy. This will be updated later to include all enemy types
             GhostFace target = hit.transform.GetComponentInParent<GhostFace>();
 
             //Check if we should increase or reduce damage based on where we hit
